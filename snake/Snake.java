@@ -23,7 +23,7 @@ import java.util.*;
 public class Snake extends JFrame {
 
     
-    final int WIDTH = 1200, HEIGHT = 600;
+    final int WIDTH = 400, HEIGHT = 400;
     final int SIZE = 20;
     double speed = 1; 
     final int UP = 0, RIGHT = 3, DOWN = 1, LEFT = 2, NONE = 4;
@@ -33,6 +33,8 @@ public class Snake extends JFrame {
     int LENGH = 3; 
     int HEAD = 1;
     int TAIL = LENGH;
+    
+    int SPEED = 1; 
     
     int startX = SIZE+SIZE/2;
     int startY = HEIGHT-SIZE-SIZE/2;
@@ -52,36 +54,84 @@ public class Snake extends JFrame {
         setVisible(true);
         
         
-      
+        Move m = new Move();
+        m.start();
         
-        //Move m = new Move();
-        //m.start();
-        
-        //snake
+        // filling up sqr array with square blocks for snake
         for(int i = 1; i <= 100; i++)
             {
              Rectangle r = new Rectangle(startX-SIZE*i,startY,SIZE,SIZE);
              sqr[i] = r;
             }
         
+        System.out.println("test output");
+        
         repaint();
     }
     
-    
+    private void Dinner(){
+
+                System.out.println("head: "+HEAD);
+                System.out.println("tail: "+TAIL);
+
+                int new_baitX = (int)(Math.random()*(WIDTH-2*SIZE))+SIZE/2;
+                int new_baitY = (int)(Math.random()*(HEIGHT-3*SIZE))+SIZE+SIZE/2;
+                bait.x = new_baitX;
+                bait.y = new_baitY;
+
+                SPEED++;
+
+                
+                if(DIR == RIGHT){
+                    for(int i=HEAD; i<=LENGH; i++){
+                         sqr[HEAD+i].x = sqr[HEAD+i].x+SIZE;
+                    }
+                }
+                /*
+                if(DIR == LEFT){
+                    for(int i=HEAD; i<=LENGH; i++){
+                         sqr[HEAD+i].x = sqr[HEAD+i].x-SIZE;
+                    }
+                }
+                
+                if(DIR == UP){
+                    for(int i=HEAD; i<=LENGH; i++){
+                         sqr[HEAD+i].y = sqr[HEAD+i].y+SIZE;
+                    }
+                }
+                
+                if(DIR == DOWN){
+                    for(int i=HEAD; i<=LENGH; i++){
+                         sqr[HEAD+i].y = sqr[HEAD+i].y-SIZE;
+                    }
+                }
+                */
+                
+                /*
+                 if(DIR == RIGHT){
+                        // adding new sqaure
+                    sqr[LENGH+1].x = sqr[HEAD].x+SIZE;
+                    sqr[LENGH+1].y = sqr[HEAD].y;
+                    }*/
+                    
+                LENGH++;
+                //HEAD++;
+    }
     
     public void paint(Graphics g){
         
+        // background
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0,0,WIDTH,HEIGHT);
         
+        // painting the Snake
         g.setColor(Color.RED);
         for(int i = 1; i <= LENGH; i++){
             g.fill3DRect(sqr[i].x,sqr[i].y,sqr[i].width,sqr[i].height,true);
             }
         
-        /// bait 
+        /// painting the bait 
         g.setColor(Color.YELLOW);
-         //g.fill3DRect(0,0,WIDTH,HEIGHT);
         g.fill3DRect(bait.x,bait.y,bait.width,bait.height,true);
         
         }
@@ -97,21 +147,7 @@ public class Snake extends JFrame {
                 //System.out.println("test"+i);
                 
                 try{
-                    //MoveS ms = new MoveS();
-                    //ms.run();
                     
-                    //if(DIR!=NONE){
-                        
-                    
-                        if(sqr[HEAD].intersects(bait)){
-                            
-                            LENGH++;
-                            int new_baitX = (int)(Math.random()*(WIDTH-2*SIZE))+SIZE/2;
-                            int new_baitY = (int)(Math.random()*(HEIGHT-3*SIZE))+SIZE+SIZE/2;
-                            bait.x = new_baitX;
-                            bait.y = new_baitY;
-                            
-                        }
                     
                         if(DIR==RIGHT)  {
                             sqr[TAIL].x = sqr[HEAD].x+SIZE;   // rigth
@@ -131,8 +167,7 @@ public class Snake extends JFrame {
                             sqr[TAIL].x = sqr[HEAD].x-SIZE;   // left
                             sqr[TAIL].y = sqr[HEAD].y;        // same vert
                         }
-                           //  DIR = NONE;
-                       // }
+                           
                         
                         /// update HEAD & TAIL
                         
@@ -144,8 +179,13 @@ public class Snake extends JFrame {
                         //System.out.println("tail: "+TAIL);
                         
                         
+                        
+                    if(sqr[HEAD].intersects(bait)) Dinner();
+                        
+                        
+                        
                     repaint();
-                    Thread.sleep(200);
+                    Thread.sleep(200/SPEED);
            
                     }catch(Exception e){
                     break;
